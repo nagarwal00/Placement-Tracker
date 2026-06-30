@@ -1,0 +1,173 @@
+{% extends "base.html" %}
+
+{% block content %}
+    
+
+   <h1 class="dashboard-title">
+
+    👋 Welcome, {{ session["user_name"] }}
+
+</h1>
+
+<p class="dashboard-subtitle">
+
+    Track your placements, monitor your preparation, and stay interview-ready.
+
+</p>
+
+    
+
+
+
+<div class="row">
+
+    <!-- Total Companies -->
+
+    <div class="col-lg-4 col-md-6 mb-4">
+
+        <div class="card text-center shadow">
+
+            <div class="card-body">
+
+                <h5>Total Companies</h5>
+
+                <h1 class="text-success">
+
+                    {{ total_companies }}
+
+                </h1>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Highest Package -->
+
+    <div class="col-md-4">
+
+        <div class="card text-center shadow">
+
+            <div class="card-body">
+
+                <h5>Highest Package</h5>
+
+                <h1 class="text-danger">
+
+                    ₹ {{ highest_package }} LPA
+
+                </h1>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Average Package -->
+
+    <div class="col-md-4">
+
+        <div class="card text-center shadow">
+
+            <div class="card-body">
+
+                <h5>Average Package</h5>
+
+                <h1 class="text-warning">
+
+                    ₹ {{ average_package }} LPA
+
+                </h1>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+<br>
+
+<div class="card shadow p-4">
+
+    <h3>📈 Overall Preparation</h3>
+
+    <h2 class="text-primary">
+
+        {{ overall_progress }}%
+
+    </h2>
+
+    <div class="progress" style="height:30px;">
+
+        <div
+            class="progress-bar progress-bar-striped progress-bar-animated"
+            role="progressbar"
+            style="width: {{ overall_progress }}%;">
+
+            {{ overall_progress }}%
+
+        </div>
+
+    </div>
+
+</div>
+
+<br>
+
+<br>
+
+<br><br>
+
+<div class="card shadow p-4">
+
+    <h3 class="mb-4">
+        📅 Upcoming Drives
+    </h3>
+
+    <table class="table table-striped">
+
+        <thead>
+
+            <tr>
+
+                <th>Company</th>
+
+                <th>Visit Date</th>
+
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+        {% for company in upcoming_companies %}
+
+        <tr>
+
+            <td>{{ company[0] }}</td>
+
+            <td>{{ company[1] }}</td>
+
+        </tr>
+
+        {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+<br>
+
+<a href="/companies"
+class="btn btn-primary">
+
+← Back to Companies
+
+</a>
+
+{% endblock %}

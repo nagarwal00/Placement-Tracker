@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>{{ company[1] }}</h1>
+<h3>Progress: {{ progress }}%</h3>
+<div class="progress mb-4">
+
+    <div class="progress-bar"
+         role="progressbar"
+         style="width: {{ progress }}%;">
+
+        {{ progress }}%
+
+    </div>
+
+</div>
+
+
+<form method="POST">
+
+    <label>
+        <input type="checkbox"
+               name="dsa"
+               {% if prep[2] %}checked{% endif %}>
+        DSA Completed
+    </label>
+
+    <br><br>
+
+    <label>
+        <input type="checkbox"
+               name="resume"
+               {% if prep[3] %}checked{% endif %}>
+        Resume Completed
+    </label>
+
+    <br><br>
+
+    <label>
+        <input type="checkbox"
+               name="hr"
+               {% if prep[4] %}checked{% endif %}>
+        HR Completed
+    </label>
+
+    <br><br>
+
+    <button type="submit" class="btn btn-primary">
+    Save
+    </button>
+
+</form>
+{% endblock %}

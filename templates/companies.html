@@ -1,0 +1,173 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="card shadow-lg p-4">
+
+<h2 class="text-primary mb-4">
+📋 Companies List
+</h2>
+
+<form method="GET" action="/companies" class="row mb-4">
+
+    <div class="col-md-8">
+
+        <input
+            type="text"
+            name="search"
+            class="form-control"
+            placeholder="🔍 Search Company..."
+            value="{{ search if search else '' }}">
+
+    </div>
+
+    <div class="col-md-2">
+
+        <button class="btn btn-primary w-100">
+
+            Search
+
+        </button>
+
+    </div>
+
+    <div class="col-md-2">
+
+        <a href="/companies"
+           class="btn btn-secondary w-100">
+
+            Clear
+
+        </a>
+
+    </div>
+
+</form>
+
+<a href="/add"
+class="btn btn-success mb-4">
+
+➕ Add Company
+
+</a>
+
+<table class="table table-striped table-hover align-middle">
+
+<thead class="table-dark">
+
+<tr>
+
+<th>ID</th>
+
+<th>Company</th>
+
+<th>Role</th>
+
+<th>Package</th>
+
+<th>Visit Date</th>
+
+<th>Eligibility</th>
+
+<th>Preparation</th>
+<th>Edit</th>
+<th>Delete</th>
+<th>Email</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for company in companies %}
+
+<tr>
+
+<td>{{ company[0] }}</td>
+
+<td>{{ company[1] }}</td>
+
+<td>{{ company[2] }}</td>
+
+<td>
+
+<span class="badge bg-success">
+
+₹ {{ company[3] }} LPA
+
+</span>
+
+</td>
+
+<td>{{ company[4] }}</td>
+
+<td>
+
+<span class="badge bg-info">
+
+{{ company[5] }}
+
+</span>
+
+</td>
+
+<td>
+
+<a href="/prep/{{ company[0] }}"
+class="btn btn-primary btn-sm">
+
+Prep Status
+
+</a>
+
+</td>
+
+<td>
+
+    <a href="/edit/{{ company[0] }}"
+       class="btn btn-warning">
+
+        ✏ Edit
+
+    </a>
+
+</td>
+
+<td>
+
+    <a
+        href="/delete/{{ company[0] }}"
+        class="btn btn-danger"
+        onclick="return confirm('Delete this company?')">
+
+        🗑 Delete
+
+    </a>
+
+</td>
+
+<td>
+
+    <a
+        href="/send_reminder/{{ company[0] }}"
+        class="btn btn-info"
+        onclick="return confirm('Send reminder email?')">
+
+        📧 Send
+
+    </a>
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+{% endblock %}

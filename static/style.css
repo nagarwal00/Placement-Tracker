@@ -1,0 +1,211 @@
+/* Google Font */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:'Poppins',sans-serif;
+    background:#f4f7fc;
+}
+
+/* ===========================
+   AUTHENTICATION PAGES
+=========================== */
+
+.auth-bg{
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:linear-gradient(135deg,#1e3a8a,#2563eb,#60a5fa);
+}
+
+.auth-card{
+
+    background:white;
+
+    width:450px;
+
+    border-radius:20px;
+
+    padding:40px;
+
+    box-shadow:0 25px 60px rgba(0,0,0,.18);
+
+    transition:.3s;
+
+}
+
+.auth-title{
+
+    font-size:32px;
+
+    font-weight:700;
+
+    color:#2563eb;
+
+    margin-bottom:10px;
+
+}
+
+.auth-card:hover{
+
+    transform:translateY(-5px);
+
+}
+
+.auth-subtitle{
+
+    color:#666;
+
+    margin-bottom:25px;
+
+}
+
+.form-control{
+
+    border-radius:12px;
+
+    padding:12px;
+
+    border:1px solid #d1d5db;
+
+}
+
+.form-control:focus{
+
+    border-color:#2563eb;
+
+    box-shadow:0 0 0 .2rem rgba(37,99,235,.25);
+
+}
+
+.btn-primary{
+
+    border-radius:12px;
+
+    padding:12px;
+
+    font-weight:600;
+
+}
+
+.btn{
+
+    border-radius:12px;
+
+    padding:12px;
+
+    font-weight:600;
+
+    transition:.3s;
+
+}
+
+.btn:hover{
+
+    transform:translateY(-2px);
+
+}
+
+a{
+
+    text-decoration:none;
+
+}
+
+.website-title{
+
+    color:white;
+
+    font-size:42px;
+
+    font-weight:700;
+
+}
+
+.tagline{
+
+    color:rgba(255,255,255,.9);
+
+    font-size:18px;
+
+}
+
+/* ===========================
+   DASHBOARD
+=========================== */
+
+.dashboard-title{
+
+    font-size:38px;
+
+    font-weight:700;
+
+    color:#1e3a8a;
+
+}
+
+.dashboard-subtitle{
+
+    color:#64748b;
+
+    margin-bottom:30px;
+
+}
+
+.stat-card{
+
+    background:white;
+
+    border-radius:20px;
+
+    padding:25px;
+
+    box-shadow:0 10px 30px rgba(0,0,0,.08);
+
+    transition:.3s;
+
+    border:none;
+
+}
+
+.stat-card:hover{
+
+    transform:translateY(-8px);
+
+    box-shadow:0 20px 40px rgba(0,0,0,.12);
+
+}
+
+.stat-icon{
+
+    font-size:40px;
+
+}
+
+.stat-number{
+
+    font-size:34px;
+
+    font-weight:700;
+
+    color:#2563eb;
+
+}
+
+.section-card{
+
+    background:white;
+
+    border-radius:20px;
+
+    padding:25px;
+
+    box-shadow:0 10px 30px rgba(0,0,0,.08);
+
+}
