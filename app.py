@@ -1,3 +1,6 @@
+from werkzeug.security import generate_password_hash, check_password_hash
+import re
+
 from flask import Flask, render_template, request, redirect
 import sqlite3
 from email_utils import send_reminder
@@ -5,6 +8,16 @@ from email_utils import send_reminder
 from flask import Flask, render_template, request, redirect, session
 
 app = Flask(__name__)
+
+def valid_password(password):
+
+    if len(password) != 8:
+        return False
+
+    pattern = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8}$'
+
+    return re.match(pattern, password)
+
 app.secret_key = "placement_tracker_secret"
 
 
@@ -341,16 +354,28 @@ def register():
         name = request.form["name"]
         email = request.form["email"]
         password = request.form["password"]
+        if not valid_password(password):
+
+           return """
+    Password must:
+    <br>• Be exactly 8 characters
+    <br>• Contain one uppercase letter
+    <br>• Contain one lowercase letter
+    <br>• Contain one digit
+    <br>• Contain one special character
+    """
 
         conn = sqlite3.connect("placement.db")
         cursor = conn.cursor()
 
         try:
 
+            hashed_password = generate_password_hash(password)
+
             cursor.execute("""
-            INSERT INTO users(name, email, password)
-            VALUES (?, ?, ?)
-            """, (name, email, password))
+INSERT INTO users(name,email,password)
+VALUES(?,?,?)
+""",(name,email,hashed_password))
 
             conn.commit()
 
@@ -373,25 +398,26 @@ def login():
 
         email = request.form["email"]
         password = request.form["password"]
-        print(email, password)
 
         conn = sqlite3.connect("placement.db")
         cursor = conn.cursor()
 
-        cursor.execute("""
-        SELECT * FROM users
-        WHERE email=? AND password=?
-        """, (email, password))
+        cursor.execute(
+            "SELECT * FROM users WHERE email=?",
+            (email,)
+        )
 
         user = cursor.fetchone()
-        print(user)
 
         conn.close()
 
-        if user:
+        if user and check_password_hash(user[3], password):
+
             session["user_id"] = user[0]
             session["user_name"] = user[1]
+
             return redirect("/dashboard")
+
         else:
             return "Invalid Email or Password!"
 
