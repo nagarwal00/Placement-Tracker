@@ -1,12 +1,18 @@
+import os
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+from dotenv import load_dotenv
 
-# Replace with your own Gmail address
-SENDER_EMAIL = "nagarwal_be24@thapar.edu"
+load_dotenv()  # reads variables from a local .env file
 
-# Replace with your 16-character App Password
-APP_PASSWORD = "crdt wmfw bmfd mzxs"
+SENDER_EMAIL = os.getenv("SENDER_EMAIL")
+APP_PASSWORD = os.getenv("APP_PASSWORD")
+
+if not SENDER_EMAIL or not APP_PASSWORD:
+    raise RuntimeError(
+        "SENDER_EMAIL and APP_PASSWORD must be set in your .env file."
+    )
 
 def send_reminder(receiver_email, company_name, role, package, visit_date):
 

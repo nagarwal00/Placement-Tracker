@@ -1,24 +1,32 @@
+import os
 from werkzeug.security import generate_password_hash, check_password_hash
 import re
 
 from flask import Flask, render_template, request, redirect
 import sqlite3
 from email_utils import send_reminder
+from dotenv import load_dotenv
+python-dotenv==1.0.1
+
 
 from flask import Flask, render_template, request, redirect, session
+
+load_dotenv()
 
 app = Flask(__name__)
 
 def valid_password(password):
 
-    if len(password) != 8:
+    if len(password) < 8:
         return False
 
-    pattern = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8}$'
+    pattern = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$'
 
     return re.match(pattern, password)
 
-app.secret_key = "placement_tracker_secret"
+app.secret_key = os.getenv("SECRET_KEY")
+if not app.secret_key:
+    raise RuntimeError("SECRET_KEY must be set in your .env file.")
 
 
 @app.route("/")
@@ -248,6 +256,9 @@ def dashboard():
 @app.route("/edit/<int:company_id>", methods=["GET", "POST"])
 def edit_company(company_id):
 
+    if "user_id" not in session:
+        return redirect("/login")
+
     conn = sqlite3.connect("placement.db")
     cursor = conn.cursor()
     user_id = session["user_id"]
@@ -268,8 +279,8 @@ def edit_company(company_id):
             package=?,
             visit_date=?,
             eligibility=?
-        WHERE id=?
-        """, (name, role, package, visit_date, eligibility, company_id))
+        WHERE id=? AND user_id=?
+        """, (name, role, package, visit_date, eligibility, company_id, user_id))
 
         conn.commit()
         conn.close()
@@ -297,8 +308,23 @@ def edit_company(company_id):
 @app.route("/delete/<int:company_id>")
 def delete_company(company_id):
 
+    if "user_id" not in session:
+        return redirect("/login")
+
+    user_id = session["user_id"]
+
     conn = sqlite3.connect("placement.db")
     cursor = conn.cursor()
+
+    # Confirm this company belongs to the logged-in user before deleting anything
+    cursor.execute(
+        "SELECT id FROM companies WHERE id=? AND user_id=?",
+        (company_id, user_id)
+    )
+    company = cursor.fetchone()
+    if company is None:
+        conn.close()
+        return "Access Denied!"
 
     # Delete prep status first
     cursor.execute(
@@ -308,8 +334,8 @@ def delete_company(company_id):
 
     # Delete company
     cursor.execute(
-        "DELETE FROM companies WHERE id=?",
-        (company_id,)
+        "DELETE FROM companies WHERE id=? AND user_id=?",
+        (company_id, user_id)
     )
 
     conn.commit()
@@ -320,21 +346,29 @@ def delete_company(company_id):
 @app.route("/send_reminder/<int:company_id>")
 def send_company_reminder(company_id):
 
+    if "user_id" not in session:
+        return redirect("/login")
+
+    user_id = session["user_id"]
+
     conn = sqlite3.connect("placement.db")
     cursor = conn.cursor()
 
     cursor.execute("""
         SELECT name, role, package, visit_date
         FROM companies
-        WHERE id=?
-    """, (company_id,))
+        WHERE id=? AND user_id=?
+    """, (company_id, user_id))
 
     company = cursor.fetchone()
 
     conn.close()
 
+    if company is None:
+        return "Access Denied!"
+
     # Change this to the email where you want reminders
-    receiver_email = "nagarwal_be24@thapar.edu"
+    receiver_email = os.getenv("SENDER_EMAIL")
 
     send_reminder(
         receiver_email=receiver_email,
